@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import sys, time, math
 import numpy as np
 import cv2
 import sympy
@@ -11,9 +12,23 @@ def rms(arr, rnd=False, ndigits=0) :
 	if rnd == True :				# rndがTrueの時，四捨五入（桁はndigistで指定）
 		rms = round(rms, ndigits)
 	elif rnd != True and rnd != False :
-		print("rnd is only True or False")
-		exit()
+		sys.exit("rnd is only True or False")
 	return rms
+
+"""rmsをdBに変換する"""
+def rms2db(rms) :
+	db = 20.0 * math.log10(rms)
+	return db
+
+"""t(ms)待機"""
+def delay(t) :
+	t /= 1000.0
+	time.sleep(t)
+
+def framerate(fps) :							# Config of framerate
+	ms = round(1000.0 / fps, 0)					# Between-time of frame(mill-second)
+	s = ms / 1000.0								# Between-time of frame(second)
+	time.sleep(s)
 	
 """アフィン返還による画像回転"""
 def affine(frame, angle=0.0, scale=1.0) :
@@ -30,43 +45,8 @@ def affine(frame, angle=0.0, scale=1.0) :
 		exit()
 
 """pre_min-pre_maxの範囲の値xをnow_min-now_maxの範囲で置き換える（Processingのmap関数と同じ）"""
-def map_pro(x, pre_min, pre_max, now_min, now_max) :
+def mapping(x, pre_min, pre_max, now_min, now_max) :
 	a, b = sympy.symbols("a, b")
 	f = sympy.solve([pre_max * a + b - now_max, pre_min * a + b - now_min], [a, b])
 	y = f[a] * x + f[b]
 	return y
-
-def explanation() :
-	n = "need library: "
-	print("rms(arr, rnd=False, ndigist=0)")
-	print("arr is list or ndarray(ndim=1), return value is used round(return, ndigist) when rnd=True")
-	print(n + "Numpy")
-
-	print("affine(frame, angle=0.0, scale=0.0)")
-	print("frame is target image, angle is rotation degrees, scale is image magnification")
-	print(n + "Numpy & OpenCV")
-
-	print("map_pro(x, pre_min, pre_max, now_min, now_max)")
-	print("this function is same as map() in Processing")
-	print("x(pre_min~pre_max) change to return(now_min~now_max")
-	print(n + "Sympy")
-
-if __name__ == "__main__" :
-	explanation()
-	arr = [1, 2, 3, 4, 5]
-	r = rms(arr)
-	print("rms = %s" %r)
-
-	m = map_pro(5, 0, 10, 0, 100)
-	print("map_pro = %s" %m)
-
-	src = cv2.VideoCapture(0)
-	ret, frame = src.read()
-	if ret == True :
-		af = affine(frame, 45)
-		af = cv2.resize(af, (af.shape[1]/3, af.shape[0]/3))
-		cv2.imshow("Affine", af)
-		cv2.waitKey(0)
-		src.release()
-		cv2.destroyAllWindows()
-	exit()
