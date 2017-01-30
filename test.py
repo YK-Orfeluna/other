@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from goma import *
+from func import *
 
 if __name__ == "__main__" :
 	arr = [1, 2, 3, 4, 5]
