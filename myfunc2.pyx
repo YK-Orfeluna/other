@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import time, math
-import cython
+#import cython
 
-import numpy as np
-cimport numpy as np
-DTYPE = np.float64
-ctypedef np.float64_t DTYPE_t
 
 def mapping(double value, double fromLow, double fromHigh, double toLow, double toHigh) :
-	cdef double a, b, out
-	a = (toLow-toHigh) / (fromLow-fromHigh)
-	b = toLow - fromLow * a
-	out = a * value + b
+	cdef double a = (toLow-toHigh) / (fromLow-fromHigh)
+	cdef double b = y1 - x1*a
+	cdef double out = a*value + b
 	return out
 
 cdef double thouthand = 1000.0
@@ -27,9 +22,9 @@ def framerate(int fps) :
 	cdef int ms = round(thouthand / fps, zero)
 	time.sleep(ms)
 
-def rms(np.ndarray[DTYPE_t, ndim=1] arr) :
-	cdef double rms = np.sqrt(np.mean(np.square(arr)))
-	return rms
+# def rms(arr) :
+# 	rms = np.sqrt(np.mean(np.square(arr)))
+# 	return rms
 
 cdef double tw = 20.0
 def rms2db(double rms) :
