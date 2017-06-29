@@ -36,3 +36,9 @@ def rms2db(double rms) :
 	global tw
 	cdef double db = tw * math.log10(rms)
 	return db
+
+def se(np.ndarray[DTYPE_t, ndim=1] x) :
+	cdef double s = np.std(x, ddof=1)
+	cdef int n = len(x)
+	cdef double se = s / np.sqrt(n)
+	return se

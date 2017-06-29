@@ -50,3 +50,16 @@ def mapping(x, pre_min, pre_max, now_min, now_max) :
 	f = sympy.solve([pre_max * a + b - now_max, pre_min * a + b - now_min], [a, b])
 	y = f[a] * x + f[b]
 	return y
+
+def se(x, axis=None) :
+	s = np.std(x, ddof=1)		# 不偏分散を求める
+	n = len(x)					# データサイズ
+	se = s / np.sqrt(n)			# 標準誤差
+	return se
+
+
+if __name__ == "__main__" :
+	print(se(arr))
+
+
+
